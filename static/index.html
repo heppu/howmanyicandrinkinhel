@@ -72,13 +72,9 @@
         var arriving = $("#arriving").val().replace(/ /g, "");
         var departing = $("#departing").val().replace(/ /g, "");
         console.log(arriving, departing)
-        $.get("http://localhost:3000/api?arriving=" + arriving + "&departing=" + departing, function(data) {
-          console.log(data)
-        });
-        setTimeout(function() {
+        $.get("http://localhost/api?arriving=" + arriving + "&departing=" + departing, function(data) {
           $("#loader").hide();
-          var response = Math.floor(Math.random()*(600-2+1)+1);
-          var minutes = parseInt(response);
+          var minutes = parseInt(data);
           hours = (minutes/60).toFixed(1);
           var speed = 15;
           drinks = Math.floor(minutes/speed);
@@ -87,8 +83,7 @@
           $("#beers").html(drinks);
           $("#result").show();
           $("#alcohol").show();
-
-        }, 500);
+        });
       });
 
       $("#alcohol").submit(function(event) {

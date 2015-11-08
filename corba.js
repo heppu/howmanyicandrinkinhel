@@ -7,19 +7,26 @@ var app = express();
 app.use(express.static('static'));
 app.get('/api', function (req, res) {
   var a = req.query.arriving;
-  var d = req.query.daparting;
+  var d = req.query.departing;
+  console.log(req.query);
+  console.log('arriving:', a);
+  console.log('departing:', d);
 
   parseFlight(a, 4, function(Adata){
-    console.log("A data:", Adata)
+    console.log('A data:', Adata)
     if(Adata !== false) {
       parseFlight(d, 1, function(Bdata){
-        console.log(Bdata);
-        var diff = Math.round((Adata - Bdata)/60000);
-        console.log(diff)
-        if(diff<0) {
-          res.status(404).send();
+        console.log('B Data:', Bdata);
+        if(Bdata !== false) {
+          var diff = Math.round((Adata - Bdata)/60000);
+          console.log(diff)
+          if(diff<1) {
+            res.status(404).send();
+          } else {
+            res.send(diff.toString());
+          }
         } else {
-          res.send(diff.toString());
+          res.status(404).send();
         }
       });
     } else {
@@ -47,7 +54,7 @@ function parseFlight(id, i, callback){
     }
     $ = cheerio.load(body);
     // Find card
-    var card = $('li.g>div').first()
+    var card = $('li.g>div').first();
     if (card.length>0) {
       //Find flight info
       var trs = card.find('tr').toArray();
@@ -69,10 +76,10 @@ function parseFlight(id, i, callback){
               var day = date[0];
               var month = date[1];
               var d = new Date();
-              d.setMinutes(parseInt(minutes))
-              d.setHours(parseInt(hours))
-              d.setDate(parseInt(day))
-              d.setMonth(parseInt(month))  
+              d.setMinutes(parseInt(minutes));
+              d.setHours(parseInt(hours));
+              d.setDate(parseInt(day));
+              d.setMonth(parseInt(month));
               callback(d);
             }
             return;
