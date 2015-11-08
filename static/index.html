@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HOWMANYICANDRINKINHEL</title>
+  <link href='https://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+  <style type="text/css">
+    body {
+      font-family: 'Oswald', sans-serif;
+      background-image: url('img/bg.jpg');
+      background-size: 120%;
+    }
+    #wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #wrapper h1 {
+      color: #ffffff;
+      font-size: 4em;
+      text-shadow: 3px 3px 2px rgb(103, 103, 103)
+    }
+    .input-group {
+      width: 100%;
+    }
+    .alert.alert-danger {
+      font-size: 1.3em;
+      margin-top: 1em;
+    }
+    .glyphicon-refresh-animate {
+      -animation: spin 1s infinite linear;
+      -webkit-animation: spin2 1s infinite linear;
+    }
+    @-webkit-keyframes spin2 {
+      from { -webkit-transform: rotate(0deg);}
+      to { -webkit-transform: rotate(360deg);}
+    }
+    @keyframes spin {
+      from { transform: scale(1) rotate(0deg);}
+      to { transform: scale(1) rotate(360deg);}
+    }
+
+    #alcohol {
+      margin-top: 2em;
+    }
+    label.radio.inline {
+      margin-right: 1em;
+      font-weight: normal;
+      font-size: 1.5em;
+    }
+  </style>
+  <script>
+    $(function() {
+      $("#result").hide();
+      $("#error").hide();
+      $("#loader").hide();
+      $("#alcohol").hide();
+      $("#bac-result").hide();
+
+      var drinks = 0;
+      var hours = 0;
+
+      $("#flight").submit(function(event) {
+        event.preventDefault();
+        $("#bac-result").hide();
+        $("#result").hide();
+        $("#loader").show();
+        var arriving = $("#arriving").val().replace(/ /g, "");
+        var departing = $("#departing").val().replace(/ /g, "");
+        console.log(arriving, departing)
+        $.get("http://localhost:3000/api?arriving=" + arriving + "&departing=" + departing, function(data) {
+          console.log(data)
+        });
+        setTimeout(function() {
+          $("#loader").hide();
+          var response = Math.floor(Math.random()*(600-2+1)+1);
+          var minutes = parseInt(response);
+          hours = (minutes/60).toFixed(1);
+          var speed = 15;
+          drinks = Math.floor(minutes/speed);
+          console.log('hello');
+          $("#hours").html(hours);
+          $("#beers").html(drinks);
+          $("#result").show();
+          $("#alcohol").show();
+
+        }, 500);
+      });
+
+      $("#alcohol").submit(function(event) {
+        event.preventDefault();
+        $("#bac-result").show();
+        var ismale = $("input[name='gender']").val() === 'male';
+        var weight = parseInt($("#weight").val());
+
+        var male = 0.75; 
+        var female = 0.66; 
+        var gender = female;
+        if(ismale) {
+          gender = male;
+        }
+         
+        var sober = (drinks*12 - (weight / 10)*hours) / (gender*weight);
+         
+        sober = Math.round(sober*Math.pow(10,2))/Math.pow(10,2); 
+        $("#bac").html(sober);
+      });
+
+    });
+    
+  </script>
+</head>
+<body>
+
+  <div id="wrapper">
+    <h1>HOW MANY I CAN DRINK IN HEL</h1>
+
+    <form role="form" id="flight">
+      <div class="form-group form-group-lg">
+        <input type="text" class="form-control" id="arriving" placeholder="Arriving flight (e.g., AY6843)" pattern=".{3,}" required autocomplete="off">
+      </div>
+      <div class="form-group form-group-lg">
+        <input type="text" class="form-control" id="departing" placeholder="Departing flight (e.g., AY938)" pattern=".{3,}" required autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" aria-label="Left Align" id="submit">
+        <i class="fa fa-beer"></i>
+        BEER PLEASE
+      </button>
+    </form>
+
+    <div id="error" class="alert alert-danger" role="alert"><b>Oh, snap:</b> Error processing flights, please check</div>
+    <div id="loader">
+      <h3><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</h3>
+    </div>
+    
+    <div id="result">
+      <h3>YOU GOT <span class="label label-danger" id="hours">0</span> HOURS AND YOU CAN DRINK APPROX <span class="label label-danger" id="beers">0</span> BEERS</h3>
+
+    </div>
+  
+    <form role="form" id="alcohol">
+      <div class="form-inline">
+        <div class="controls-row">
+          <label class="radio inline">
+              <input type="radio" name="gender" value="male" required>
+              Male
+          </label>
+          <label class="radio inline">
+              <input type="radio" name="gender" value="female" required>
+              Female
+           </label>
+        </div>
+      </div>
+      <div class="form-group form-group-lg">
+        <input type="number" class="form-control" id="weight" placeholder="Weight (kg)" pattern=".{2,}" required autocomplete="off" min="0">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" aria-label="Left Align">
+        <i class="fa fa-magic"></i>
+        CALCULATE BLOOD ALCOHOL
+      </button>
+    </form>
+
+    <div id="bac-result">
+      <h3>YOUR BLOOD ALCOHOL CONTENT WOULD BE ABOUT <span class="label label-danger" id="bac">0</span> .%</h3>
+    </div>
+
+  </div>
+
+</body>
+</html>
