@@ -16,13 +16,13 @@ app.get('/api', function (req, res) {
         var diff = Math.round((Adata - Bdata)/60000);
         console.log(diff)
         if(diff<0) {
-          res.status(404).send(data);
+          res.status(404).send();
         } else {
           res.send(diff.toString());
         }
       });
     } else {
-      res.status(404).send(data);
+      res.status(404).send();
     }
   });
 });
