@@ -69,6 +69,7 @@
         $("#bac-result").hide();
         $("#result").hide();
         $("#loader").show();
+        $("#error").hide();
         var arriving = $("#arriving").val().replace(/ /g, "");
         var departing = $("#departing").val().replace(/ /g, "");
         $.get("/api?arriving=" + arriving + "&departing=" + departing, function(data) {
@@ -85,6 +86,10 @@
           $("#result").show();
           $("#alcohol").show();
           $("#alcohol").submit();
+        }).fail(function(error) {
+          $("#error").show();
+          $("#loader").hide();
+          console.log(error);
         });
       });
 
@@ -132,7 +137,7 @@
       </button>
     </form>
 
-    <div id="error" class="alert alert-danger" role="alert"><b>Oh, snap:</b> Error processing flights, please check</div>
+    <div id="error" class="alert alert-danger" role="alert"><b>Oh, snap:</b> Error processing flights, please check.</div>
     <div id="loader">
       <h3><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</h3>
     </div>
