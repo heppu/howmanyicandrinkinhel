@@ -72,7 +72,7 @@
         var arriving = $("#arriving").val().replace(/ /g, "");
         var departing = $("#departing").val().replace(/ /g, "");
         console.log(arriving, departing)
-        $.get("http://localhost/api?arriving=" + arriving + "&departing=" + departing, function(data) {
+        $.get("/api?arriving=" + arriving + "&departing=" + departing, function(data) {
           $("#loader").hide();
           var minutes = parseInt(data);
           hours = (minutes/60).toFixed(1);
