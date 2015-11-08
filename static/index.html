@@ -77,6 +77,9 @@
           hours = (minutes/60).toFixed(1);
           var speed = 15;
           drinks = Math.floor(minutes/speed);
+          if (drinks === 0) {
+            drinks = 1; // There's always time for one
+          }
           $("#hours").html(hours);
           $("#beers").html(drinks);
           $("#result").show();
@@ -101,6 +104,9 @@
         var sober = (drinks*12 - (weight / 10)*hours) / (gender*weight);
          
         sober = Math.round(sober*Math.pow(10,2))/Math.pow(10,2); 
+        if (sober < 0) {
+          sober = 0;
+        }
         $("#bac").html(sober);
       });
 
