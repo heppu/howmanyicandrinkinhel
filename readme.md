@@ -8,5 +8,5 @@ Backend takes two flight ids as argument, makes google search for those flights 
 
 ##Running application
 ```shell
-node corba.js
+sudo node corba.js
 ```
