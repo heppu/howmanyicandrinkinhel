@@ -4,6 +4,7 @@ var express = require('express');
 
 var app = express();
 
+app.use(express.static('static'));
 app.get('/api', function (req, res) {
   var a = req.query.arriving;
   var d = req.query.daparting;
