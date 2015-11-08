@@ -1,6 +1,6 @@
 #How many can I drink in HEL
 
-Terrible application for most useless app in hackjunction 2015 by team corbaKotka.
+Terrific application for most useless app in hackjunction 2015 by team corbaKotka.
 
 The aim of this application is to calculate time in Helsinki Vantaa airport during two flights and estimate how many beers you can drink in [Oak Barrel](https://www.finavia.fi/fi/helsinkivantaa/palvelut/ruokaa-juomaa/the-oak-barrel) durin that time.
 
