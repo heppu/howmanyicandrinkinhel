@@ -18,7 +18,7 @@ app.get('/api', function (req, res) {
       parseFlight(d, 1, function(Bdata){
         console.log('B Data:', Bdata);
         if(Bdata !== false) {
-          var diff = Math.round((Adata - Bdata)/60000);
+          var diff = Math.round((Bdata - Adata)/60000);
           console.log(diff)
           if(diff<1) {
             res.status(404).send();
